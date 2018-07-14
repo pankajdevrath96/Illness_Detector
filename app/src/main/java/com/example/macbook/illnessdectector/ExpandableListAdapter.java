@@ -16,7 +16,7 @@ public class ExpandableListAdapter  extends BaseExpandableListAdapter {
     private List<String> listheader;
     private HashMap<String,List<String>> listHashMap;
 
-    public ExpandableListAdapter(Context context, List<String> listheader, HashMap<String, List<String>> listHashMap) {
+    ExpandableListAdapter(Context context, List<String> listheader, HashMap<String, List<String>> listHashMap) {
         this.context = context;
         this.listheader = listheader;
         this.listHashMap = listHashMap;
@@ -63,9 +63,10 @@ public class ExpandableListAdapter  extends BaseExpandableListAdapter {
         if(view == null)
         {
             LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            assert inflater != null;
             view = inflater.inflate(R.layout.list_group,null);
         }
-        TextView tx = (TextView)view.findViewById(R.id.listheader);
+        TextView tx = view.findViewById(R.id.listheader);
         tx.setText(headertitle);
         return view;
     }
@@ -76,9 +77,10 @@ public class ExpandableListAdapter  extends BaseExpandableListAdapter {
         if(view == null)
         {
             LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            assert inflater != null;
             view = inflater.inflate(R.layout.list_childitem,null);
         }
-        TextView textchild = (TextView)view.findViewById(R.id.listchild);
+        TextView textchild = view.findViewById(R.id.listchild);
         textchild.setText(childtext);
         return view;
     }

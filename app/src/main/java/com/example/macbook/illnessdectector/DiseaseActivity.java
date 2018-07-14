@@ -2,6 +2,8 @@ package com.example.macbook.illnessdectector;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ExpandableListView;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,13 +13,22 @@ public class DiseaseActivity extends AppCompatActivity {
     ExpandableListAdapter expandableListAdapter;
     List<String> expandableListTitle;
     HashMap<String,List<String>> hashMap;
+    DatabaseHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_disease);
+
+        db = new DatabaseHelper(getApplicationContext());
+        try {
+            db.createDatabase();
+            db.openDatabase();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         expandableListView = findViewById(R.id.exp_list);
-        expandableListView=findViewById(R.id.exp_list);
         ListData();
         expandableListAdapter=new ExpandableListAdapter(this,expandableListTitle,hashMap);
         expandableListView.setAdapter(expandableListAdapter);
@@ -27,13 +38,15 @@ public class DiseaseActivity extends AppCompatActivity {
         expandableListTitle=new ArrayList<>();
         hashMap=new HashMap<>();
         //Adding ListHeadder
-        expandableListTitle.add("ChickenPox");
+
+        expandableListTitle = db.getDiseases();
+        /*expandableListTitle.add("ChickenPox");
         expandableListTitle.add("Jaundice");
         expandableListTitle.add("Malaria");
-        expandableListTitle.add("Typhoid");
+        expandableListTitle.add("Typhoid");*/
         //Adding data in List Header(Child data)
 
-        List<String> ChickenPox=new ArrayList<>();
+        /*List<String> ChickenPox=new ArrayList<>();
         ChickenPox.add("Cold");
         ChickenPox.add("Fever");
         ChickenPox.add("Headache");
@@ -72,12 +85,20 @@ public class DiseaseActivity extends AppCompatActivity {
         Typhoid.add("Vomit");
         Typhoid.add("Weakness");
         Typhoid.add("Stomachache");
-        Typhoid.add("LooseMotion");
+        Typhoid.add("LooseMotion");*/
 
-        hashMap.put(expandableListTitle.get(0),ChickenPox);
-        hashMap.put(expandableListTitle.get(1),Jaundice);
-        hashMap.put(expandableListTitle.get(2),Malaria);
-        hashMap.put(expandableListTitle.get(3),Typhoid);
+        List<String> Disease = new ArrayList<>();
+
+        for (int counter = 0; counter < expandableListTitle.size(); counter++) {
+            //System.out.println(expandableListTitle.get(counter));
+            Disease = db.getSymptomsFromDisease(expandableListTitle.get(counter));
+            hashMap.put(expandableListTitle.get(counter), Disease);
+        }
+
+//        hashMap.put(expandableListTitle.get(0),ChickenPox);
+//        hashMap.put(expandableListTitle.get(1),Jaundice);
+//        hashMap.put(expandableListTitle.get(2),Malaria);
+//        hashMap.put(expandableListTitle.get(3),Typhoid);
 
     }
 
